@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luma — Discover Your Next Moment</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- App Styles -->
+<link rel="stylesheet" href="luma-styles.css">
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────
+     SPLASH SCREEN
+───────────────────────────────────────────── -->
+<div id="splash">
+  <div class="splash-logo">Luma</div>
+  <div class="splash-sub">Discover your next moment</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     AUTH SCREEN
+───────────────────────────────────────────── -->
+<div id="auth-screen" class="screen">
+  <div class="auth-bg"></div>
+
+  <!-- Hero Art -->
+  <div class="auth-art">
+    <div class="auth-tagline">Find your next <em>perfect</em> moment</div>
+    <p class="auth-desc">Coffee dates, birthday bashes, romantic dinners — all in one app.</p>
+    <div class="float-cards">
+      <div class="float-card"><div class="fc-icon" style="background:#fef3ee">☕</div><div><div>Café Aura</div><div class="fc-meta">0.3 km · 4.8 ★</div></div></div>
+      <div class="float-card"><div class="fc-icon" style="background:#f3effe">🎂</div><div><div>The Grand Hall</div><div class="fc-meta">1.2 km · 4.9 ★</div></div></div>
+      <div class="float-card"><div class="fc-icon" style="background:#fef0f0">🌹</div><div><div>Skyline Rooftop</div><div class="fc-meta">0.8 km · 5.0 ★</div></div></div>
+    </div>
+  </div>
+
+  <!-- ════ LOGIN PANEL — Phone Number ════ -->
+  <div class="auth-panel" id="login-panel">
+    <h2>Welcome back 👋</h2>
+    <p class="sub">Enter your phone number to continue</p>
+
+    <div class="inp-group" id="lg-phone-group">
+      <label>Mobile Number</label>
+      <div class="phone-input-wrap" id="lg-phone-wrap">
+        <button class="country-btn" type="button" onclick="toggleCountryDrop('lg-cd')" id="lg-country-btn">
+          <span class="cflag" id="lg-flag">🇮🇳</span>
+          <span class="ccode" id="lg-code">+91</span>
+          <span class="cdrop">▾</span>
+        </button>
+        <input class="phone-number-input" type="tel" id="login-phone"
+          placeholder="98765 43210" inputmode="numeric" maxlength="15" autocomplete="tel"
+          oninput="validatePhone(this,'lg-phone-group','lg-phone-msg','lg')"
+          onkeypress="return /[0-9]/.test(event.key)">
+        <span class="val-icon" id="lg-phone-icon" style="right:12px;top:13px;position:absolute;z-index:2"></span>
+      </div>
+      <div class="phone-valid-strip" id="lg-strip"></div>
+      <div class="country-dropdown" id="lg-cd">
+        <div class="cd-search">
+          <input type="text" placeholder="🔍 Search country…"
+            oninput="filterCountries(this.value,'lg-cd-list','lg')" id="lg-cd-search">
+        </div>
+        <div class="cd-list" id="lg-cd-list"></div>
+      </div>
+      <div class="format-hint" id="lg-format-hint">Format: 10 digits, no spaces needed</div>
+      <div class="val-msg hint" id="lg-phone-msg">We'll send a verification code via SMS</div>
+    </div>
+
+    <button class="btn-primary" onclick="doLoginPhone()">📱 Send OTP via SMS</button>
+    <button class="btn-ghost" onclick="googleLogin()">
+      <svg width="17" height="17" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continue with Google
+    </button>
+    <p class="auth-toggle">No account? <a onclick="showSignup()">Sign up free</a></p>
+  </div>
+
+  <!-- ════ SIGNUP PANEL ════ -->
+  <div class="auth-panel" id="signup-panel" style="display:none">
+    <h2>Create account</h2>
+    <p class="sub">Join Luma and start exploring</p>
+
+    <!-- Full Name -->
+    <div class="inp-group" id="su-ng">
+      <label>Full Name</label>
+      <input type="text" id="signup-name" placeholder="Alex Johnson" autocomplete="name"
+        oninput="validateName(this,'su-ng','su-nm')">
+      <span class="val-icon" id="su-ni"></span>
+      <div class="val-msg hint" id="su-nm">First and last name</div>
+    </div>
+
+    <!-- Phone -->
+    <div class="inp-group" id="su-phone-group">
+      <label>Mobile Number</label>
+      <div class="phone-input-wrap" id="su-phone-wrap">
+        <button class="country-btn" type="button" onclick="toggleCountryDrop('su-cd')" id="su-country-btn">
+          <span class="cflag" id="su-flag">🇮🇳</span>
+          <span class="ccode" id="su-code">+91</span>
+          <span class="cdrop">▾</span>
+        </button>
+        <input class="phone-number-input" type="tel" id="signup-phone"
+          placeholder="98765 43210" inputmode="numeric" maxlength="15" autocomplete="tel"
+          oninput="validatePhone(this,'su-phone-group','su-phone-msg','su')"
+          onkeypress="return /[0-9]/.test(event.key)">
+        <span class="val-icon" id="su-phone-icon" style="right:12px;top:13px;position:absolute;z-index:2"></span>
+      </div>
+      <div class="phone-valid-strip" id="su-strip"></div>
+      <div class="country-dropdown" id="su-cd">
+        <div class="cd-search">
+          <input type="text" placeholder="🔍 Search country…"
+            oninput="filterCountries(this.value,'su-cd-list','su')" id="su-cd-search">
+        </div>
+        <div class="cd-list" id="su-cd-list"></div>
+      </div>
+      <div class="format-hint" id="su-format-hint">Format: 10 digits, no spaces needed</div>
+      <div class="val-msg hint" id="su-phone-msg">OTP will be sent to this number</div>
+    </div>
+
+    <!-- Password -->
+    <div class="inp-group" id="su-pg">
+      <label>Password</label>
+      <input type="password" id="signup-pass" placeholder="Min. 8 characters" autocomplete="new-password"
+        oninput="validatePassword(this,'su-pg','su-pm','su-sf','su-sl')">
+      <span class="val-icon" id="su-pi"></span>
+      <div class="val-msg hint" id="su-pm">Create a strong password</div>
+      <div class="strength-bar"><div class="strength-fill" id="su-sf"></div></div>
+      <div class="strength-label" id="su-sl"></div>
+      <div class="pw-rules">
+        <span class="pw-rule" id="rl">8+ chars</span>
+        <span class="pw-rule" id="ru">Uppercase</span>
+        <span class="pw-rule" id="rn">Number</span>
+        <span class="pw-rule" id="rs">Symbol</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="doSignup()">📱 Send OTP to Phone</button>
+    <button class="btn-ghost" onclick="googleLogin()">
+      <svg width="17" height="17" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Sign up with Google
+    </button>
+    <p class="auth-toggle">Have an account? <a onclick="showLogin()">Sign in</a></p>
+  </div>
+
+  <!-- ════ OTP PANEL ════ -->
+  <div class="auth-panel" id="otp-panel" style="display:none">
+    <div style="text-align:center;margin-bottom:20px">
+      <div class="otp-sent-anim" style="background:linear-gradient(135deg,#e8f4fd,var(--blush))">📱</div>
+      <h2>Verify your number</h2>
+      <p class="sub" style="margin-bottom:0">We sent a 6-digit code via SMS to</p>
+      <div class="otp-phone-badge">
+        <span id="otp-phone-display">+91 98765 43210</span>
+        <span class="badge-change" onclick="goBackFromOTP()">✏️ Change</span>
+      </div>
+    </div>
+
+    <div class="otp-boxes">
+      <input class="otp-box" maxlength="1" type="text" inputmode="numeric" id="o1" oninput="otpInput(this,1)" onkeydown="otpKey(event,1)">
+      <input class="otp-box" maxlength="1" type="text" inputmode="numeric" id="o2" oninput="otpInput(this,2)" onkeydown="otpKey(event,2)">
+      <input class="otp-box" maxlength="1" type="text" inputmode="numeric" id="o3" oninput="otpInput(this,3)" onkeydown="otpKey(event,3)">
+      <input class="otp-box" maxlength="1" type="text" inputmode="numeric" id="o4" oninput="otpInput(this,4)" onkeydown="otpKey(event,4)">
+      <input class="otp-box" maxlength="1" type="text" inputmode="numeric" id="o5" oninput="otpInput(this,5)" onkeydown="otpKey(event,5)">
+      <input class="otp-box" maxlength="1" type="text" inputmode="numeric" id="o6" oninput="otpInput(this,6)" onkeydown="otpKey(event,6)">
+    </div>
+
+    <div class="verify-status" id="verify-status"></div>
+    <div class="otp-timer">Code expires in <span class="timer-val" id="otp-timer-val">02:00</span></div>
+    <div class="otp-resend">Didn't receive it? <a id="resend-link" onclick="resendOTP()" class="disabled">Resend OTP</a></div>
+    <div class="otp-hint">💡 <strong>Demo mode:</strong> Your OTP appears in the toast notification above ↑</div>
+
+    <button class="btn-primary" id="verify-btn" onclick="verifyOTP()" style="margin-top:12px" disabled>Verify &amp; Continue ✓</button>
+    <p class="auth-toggle" style="margin-top:12px"><a onclick="goBackFromOTP()">← Back</a></p>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     MAIN APP SCREEN
+───────────────────────────────────────────── -->
+<div id="app-screen" class="screen">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-logo">Lu<span>ma</span></div>
+    <div class="topbar-right">
+      <button class="notif-btn" onclick="showToast('🔔 2 new booking reminders')">🔔<span class="notif-dot"></span></button>
+      <div class="avatar" onclick="switchTab('profile')" id="user-avatar">A</div>
+    </div>
+  </div>
+
+  <!-- Scrollable Content Area -->
+  <div class="app-content" id="app-content">
+
+    <!-- ── HOME TAB ── -->
+    <div id="tab-home">
+      <div class="hero">
+        <div class="hero-greeting" id="hero-greeting">Good evening</div>
+        <div class="hero-title">Where are you<br><em>headed tonight?</em></div>
+        <div class="search-bar">
+          <span style="font-size:20px;color:#bbb">🔍</span>
+          <input type="text" id="search-input" placeholder="Search venues, occasions, vibes…" oninput="doSearch(this.value)">
+          <button class="search-btn">→</button>
+        </div>
+        <div class="location-pill" onclick="detectLocation()">📍 <span id="location-text">Detecting location…</span></div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="section-title">Occasion</span></div>
+        <div class="occasions-scroll">
+          <button class="occ-chip active" onclick="filterOcc(this,'all')"><span>✨</span>All</button>
+          <button class="occ-chip" onclick="filterOcc(this,'coffee')"><span>☕</span>Coffee</button>
+          <button class="occ-chip" onclick="filterOcc(this,'birthday')"><span>🎂</span>Birthday</button>
+          <button class="occ-chip" onclick="filterOcc(this,'date')"><span>🌹</span>Date Night</button>
+          <button class="occ-chip" onclick="filterOcc(this,'dinner')"><span>🍽️</span>Dinner</button>
+          <button class="occ-chip" onclick="filterOcc(this,'hotel')"><span>🏨</span>Hotel</button>
+          <button class="occ-chip" onclick="filterOcc(this,'family')"><span>👨‍👩‍👧</span>Family</button>
+        </div>
+        <div class="budget-tabs">
+          <button class="budget-tab active" onclick="filterBudget(this,'all')">All</button>
+          <button class="budget-tab" onclick="filterBudget(this,'low')">₹ Low</button>
+          <button class="budget-tab" onclick="filterBudget(this,'mid')">₹₹ Mid</button>
+          <button class="budget-tab" onclick="filterBudget(this,'high')">₹₹₹ Premium</button>
+        </div>
+      </div>
+
+      <div class="section" style="margin-top:18px">
+        <div class="section-header">
+          <span class="section-title">Featured for you</span>
+          <span class="section-link">See all</span>
+        </div>
+      </div>
+      <div class="venues-grid" id="venues-grid"></div>
+
+      <div class="couples-section">
+        <h2>For Couples 🌹</h2>
+        <p>Curated romantic experiences just for two</p>
+        <div class="couples-ideas">
+          <div class="idea-chip" onclick="showToast('🕯️ Candlelight venues!')"><span class="emoji">🕯️</span><span class="label">Candlelight Dinner</span></div>
+          <div class="idea-chip" onclick="showToast('🌃 Rooftop cafes!')"><span class="emoji">🌃</span><span class="label">Rooftop Café</span></div>
+          <div class="idea-chip" onclick="showToast('🔒 Private dining!')"><span class="emoji">🔒</span><span class="label">Private Dining</span></div>
+          <div class="idea-chip" onclick="showToast('🌸 Garden spots!')"><span class="emoji">🌸</span><span class="label">Garden Picnic</span></div>
+          <div class="idea-chip" onclick="showToast('🌊 Waterfront!')"><span class="emoji">🌊</span><span class="label">Waterfront</span></div>
+        </div>
+      </div>
+
+      <div class="map-section">
+        <div class="section-header">
+          <span class="section-title">Nearby on map</span>
+          <span class="section-link" onclick="switchTab('map')">Expand</span>
+        </div>
+        <div class="map-container" onclick="switchTab('map')">
+          <div class="map-ph">
+            <div class="map-grid"></div>
+            <div class="map-pins">
+              <div style="position:absolute;left:28%;top:45%;transform:translate(-50%,-100%)"><div class="pin-bubble active">☕ Café Aura</div></div>
+              <div style="position:absolute;left:58%;top:30%;transform:translate(-50%,-100%)"><div class="pin-bubble">🎂 The Hall</div></div>
+              <div style="position:absolute;left:72%;top:62%;transform:translate(-50%,-100%)"><div class="pin-bubble">🌹 Rooftop</div></div>
+              <div style="position:absolute;left:42%;top:70%;transform:translate(-50%,-100%)"><div class="pin-bubble">🍽️ Italiano</div></div>
+            </div>
+            <span style="font-size:38px;position:relative;z-index:1">🗺️</span>
+          </div>
+          <button class="map-open-btn">🗺️ Full Map</button>
+        </div>
+      </div>
+
+      <button class="nearby-btn" onclick="nearbyDiscovery()">
+        <div class="nearby-pulse">📍</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:14px">What's near me right now?</div>
+          <div style="font-size:12px;color:var(--warm-gray);margin-top:2px">Live suggestions based on your location</div>
+        </div>
+        <span style="color:var(--warm-gray);font-size:20px">›</span>
+      </button>
+    </div>
+
+    <!-- ── MAP TAB ── -->
+    <div id="tab-map" style="display:none">
+      <div style="height:calc(100vh - 136px);position:relative;overflow:hidden">
+        <svg style="position:absolute;inset:0;width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+          <defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(0,0,0,0.07)" stroke-width="1"/></pattern></defs>
+          <rect width="100%" height="100%" fill="#e8e4de"/>
+          <rect width="100%" height="100%" fill="url(#g)"/>
+          <path d="M 0 200 Q 200 180 400 210 Q 600 240 800 200" stroke="#c8c3bb" stroke-width="8" fill="none"/>
+          <path d="M 200 0 Q 220 150 200 300 Q 180 450 200 600" stroke="#c8c3bb" stroke-width="6" fill="none"/>
+          <path d="M 0 380 Q 300 360 600 380 Q 750 390 900 370" stroke="#c8c3bb" stroke-width="5" fill="none"/>
+          <rect x="30" y="30" width="120" height="80" rx="6" fill="#d8d3cc" opacity="0.6"/>
+          <rect x="180" y="50" width="80"  height="60" rx="6" fill="#d8d3cc" opacity="0.6"/>
+          <rect x="300" y="20" width="140" height="100" rx="6" fill="#d8d3cc" opacity="0.6"/>
+        </svg>
+        <div style="position:absolute;left:25%;top:40%;transform:translate(-50%,-100%)"><div style="background:#1e1e1e;color:#fff;padding:7px 11px;border-radius:9px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer" onclick="openVenue(0)">☕ Café Aura · 0.3km</div><div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid #1e1e1e;margin:0 auto"></div></div>
+        <div style="position:absolute;left:60%;top:25%;transform:translate(-50%,-100%)"><div style="background:#c4756a;color:#fff;padding:7px 11px;border-radius:9px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer" onclick="openVenue(1)">🎂 The Grand Hall · 1.2km</div><div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid #c4756a;margin:0 auto"></div></div>
+        <div style="position:absolute;left:70%;top:58%;transform:translate(-50%,-100%)"><div style="background:#1e1e1e;color:#fff;padding:7px 11px;border-radius:9px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer" onclick="openVenue(2)">🌹 Skyline Rooftop · 0.8km</div><div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid #1e1e1e;margin:0 auto"></div></div>
+        <div style="position:absolute;left:40%;top:68%;transform:translate(-50%,-100%)"><div style="background:#1e1e1e;color:#fff;padding:7px 11px;border-radius:9px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer" onclick="openVenue(3)">🍽️ Italiano · 1.5km</div><div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid #1e1e1e;margin:0 auto"></div></div>
+        <div style="position:absolute;left:48%;top:50%"><div style="width:15px;height:15px;background:#4285f4;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 4px rgba(66,133,244,.2)"></div></div>
+        <div style="position:absolute;top:16px;left:16px;right:16px">
+          <div style="background:#fff;border-radius:13px;padding:11px 15px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.1)">
+            <span>🔍</span>
+            <input style="border:none;outline:none;flex:1;font-family:'DM Sans',sans-serif;font-size:13px" placeholder="Search on map…">
+            <span style="font-size:18px;cursor:pointer" onclick="showToast('🎯 Filters applied!')">⚙️</span>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:18px;left:16px;right:16px">
+          <div style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none">
+            <div style="flex-shrink:0;background:#fff;padding:7px 13px;border-radius:20px;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;white-space:nowrap" onclick="showToast('🟢 Open venues!')">🟢 Open Now</div>
+            <div style="flex-shrink:0;background:#fff;padding:7px 13px;border-radius:20px;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;white-space:nowrap" onclick="showToast('⭐ Top rated!')">⭐ 4.5+</div>
+            <div style="flex-shrink:0;background:#fff;padding:7px 13px;border-radius:20px;font-size:11px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.1);cursor:pointer;white-space:nowrap" onclick="showToast('₹ Budget friendly!')">₹ Budget</div>
+            <div style="flex-shrink:0;background:#1e1e1e;color:#fff;padding:7px 13px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">📍 Near me</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BOOKINGS TAB ── -->
+    <div id="tab-bookings" style="display:none;padding:22px 20px">
+      <h2 style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:5px">My Bookings</h2>
+      <p style="color:var(--warm-gray);font-size:13px;margin-bottom:22px">Upcoming &amp; past reservations</p>
+      <div id="bookings-list">
+        <div style="text-align:center;padding:56px 20px;color:var(--warm-gray)">
+          <div style="font-size:56px;margin-bottom:14px">🗓️</div>
+          <div style="font-weight:600;font-size:15px;margin-bottom:5px">No bookings yet</div>
+          <div style="font-size:13px">Start exploring and make your first reservation!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROFILE TAB ── -->
+    <div id="tab-profile" style="display:none">
+      <div class="profile-header">
+        <div class="profile-avatar-lg" id="profile-avatar-lg">A</div>
+        <div class="profile-name" id="profile-name-display">Alex Johnson</div>
+        <div class="profile-phone" id="profile-phone-display">+91 98765 43210</div>
+        <div class="profile-verified" id="profile-verified-badge">📱 Phone Verified</div>
+      </div>
+      <div class="profile-stats">
+        <div class="pstat"><div class="val" id="stat-bookings">0</div><div class="lbl">Bookings</div></div>
+        <div class="pstat"><div class="val">12</div><div class="lbl">Saved</div></div>
+        <div class="pstat"><div class="val">3</div><div class="lbl">Reviews</div></div>
+      </div>
+      <div class="pref-section">
+        <h3>Your Preferences</h3>
+        <div>
+          <button class="pref-chip on" onclick="this.classList.toggle('on')">☕ Coffee</button>
+          <button class="pref-chip" onclick="this.classList.toggle('on')">🌹 Romantic</button>
+          <button class="pref-chip on" onclick="this.classList.toggle('on')">🎂 Celebrations</button>
+          <button class="pref-chip" onclick="this.classList.toggle('on')">🍽️ Fine Dining</button>
+          <button class="pref-chip on" onclick="this.classList.toggle('on')">🏨 Hotels</button>
+        </div>
+        <h3 style="margin-top:18px">Budget Range</h3>
+        <div>
+          <button class="pref-chip" onclick="selectBudgetPref(this)">₹ Low</button>
+          <button class="pref-chip on" onclick="selectBudgetPref(this)">₹₹ Medium</button>
+          <button class="pref-chip" onclick="selectBudgetPref(this)">₹₹₹ Premium</button>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">🚪 Sign Out</button>
+    </div>
+
+  </div><!-- /app-content -->
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('home')" id="nav-home"><span class="ni">🏠</span><span class="nl">Discover</span></button>
+    <button class="nav-item" onclick="switchTab('map')"      id="nav-map"><span class="ni">🗺️</span><span class="nl">Map</span></button>
+    <button class="nav-item" onclick="switchTab('bookings')" id="nav-bookings"><span class="ni">📅</span><span class="nl">Bookings</span></button>
+    <button class="nav-item" onclick="switchTab('profile')"  id="nav-profile"><span class="ni">👤</span><span class="nl">Profile</span></button>
+  </nav>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     VENUE MODAL
+───────────────────────────────────────────── -->
+<div id="venue-modal">
+  <div class="modal-backdrop" onclick="closeVenueModal()"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-hero" id="modal-hero">🏠</div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">Venue</div>
+        <button class="modal-close" onclick="closeVenueModal()">✕</button>
+      </div>
+      <div class="modal-stats">
+        <div class="stat-item"><div class="stat-value" id="modal-rating">4.8</div><div class="stat-label">Rating</div></div>
+        <div class="stat-item"><div class="stat-value" id="modal-reviews">284</div><div class="stat-label">Reviews</div></div>
+        <div class="stat-item"><div class="stat-value" id="modal-dist">0.3km</div><div class="stat-label">Distance</div></div>
+        <div class="stat-item"><div class="stat-value" id="modal-price">₹₹</div><div class="stat-label">Budget</div></div>
+      </div>
+      <div class="ms-title">About</div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="ms-title">Photos</div>
+      <div class="photo-strip" id="modal-photos"></div>
+      <div class="ms-title">Reviews</div>
+      <div id="modal-reviews-list"></div>
+    </div>
+    <div class="book-bar">
+      <div class="price-display" style="flex:1"><div class="price" id="modal-book-price">₹1,500</div><div class="per">per person avg.</div></div>
+      <button class="btn-book" onclick="openBooking()">Reserve Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     BOOKING MODAL
+───────────────────────────────────────────── -->
+<div id="booking-modal">
+  <div class="modal-backdrop" onclick="closeBookingModal()" style="position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)"></div>
+  <div class="booking-card">
+    <h2 style="font-size:19px;font-weight:700;margin-bottom:4px">Reserve a Table</h2>
+    <p style="color:var(--warm-gray);font-size:12px;margin-bottom:18px" id="booking-venue-name">Café Aura</p>
+    <div class="bc-title">Select Date</div>
+    <div class="date-grid" id="date-grid"></div>
+    <div class="bc-title">Select Time</div>
+    <div class="time-slots" id="time-slots"></div>
+    <div class="bc-title">Guests</div>
+    <div class="guests-selector">
+      <span class="guests-label">👥 Number of guests</span>
+      <button class="guests-btn" onclick="changeGuests(-1)">−</button>
+      <span class="guests-count" id="guests-count">2</span>
+      <button class="guests-btn" onclick="changeGuests(1)">+</button>
+    </div>
+    <button class="btn-primary" onclick="proceedToPayment()">Proceed to Payment →</button>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     PAYMENT MODAL
+───────────────────────────────────────────── -->
+<div id="payment-modal">
+  <div class="modal-backdrop" onclick="closePaymentModal()" style="position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)"></div>
+  <div class="pay-sheet">
+    <div class="modal-handle"></div>
+    <div class="pay-header"><h2>💳 Secure Payment</h2><button class="pay-close" onclick="closePaymentModal()">✕</button></div>
+    <div class="order-summary">
+      <div class="order-row"><span class="ol" id="pay-venue-name">Venue</span><span class="ov" id="pay-venue-price">₹0</span></div>
+      <div class="order-row"><span class="ol">Guests</span><span class="ov" id="pay-guests">2</span></div>
+      <div class="order-row"><span class="ol">Date &amp; Time</span><span class="ov" id="pay-datetime">—</span></div>
+      <hr class="order-divider">
+      <div class="order-row"><span class="ol">Subtotal</span><span class="ov" id="pay-subtotal">₹0</span></div>
+      <div class="order-row"><span class="ol">Platform fee</span><span class="ov">₹29</span></div>
+      <div class="order-row"><span class="ol">GST (18%)</span><span class="ov" id="pay-gst">₹0</span></div>
+      <hr class="order-divider">
+      <div class="order-row order-total"><span class="ol">Total</span><span class="ov" id="pay-total">₹0</span></div>
+    </div>
+    <div class="pm-section-title">Choose payment method</div>
+    <div class="pay-methods">
+      <button class="pay-method selected" onclick="selectPayMethod(this,'upi')"><span class="pm-icon">📱</span><span class="pm-label">UPI</span></button>
+      <button class="pay-method" onclick="selectPayMethod(this,'card')"><span class="pm-icon">💳</span><span class="pm-label">Card</span></button>
+      <button class="pay-method" onclick="selectPayMethod(this,'wallet')"><span class="pm-icon">👛</span><span class="pm-label">Wallet</span></button>
+      <button class="pay-method" onclick="selectPayMethod(this,'netbank')"><span class="pm-icon">🏦</span><span class="pm-label">Net Banking</span></button>
+      <button class="pay-method" onclick="selectPayMethod(this,'cod')"><span class="pm-icon">💵</span><span class="pm-label">Pay Later</span></button>
+    </div>
+    <div class="pay-form active" id="form-upi">
+      <div class="upi-options">
+        <button class="upi-opt selected" onclick="selUPI(this)"><span class="ul">🟣</span>PhonePe</button>
+        <button class="upi-opt" onclick="selUPI(this)"><span class="ul">🔵</span>GPay</button>
+        <button class="upi-opt" onclick="selUPI(this)"><span class="ul">🟡</span>Paytm</button>
+        <button class="upi-opt" onclick="selUPI(this)"><span class="ul">🟠</span>BHIM</button>
+      </div>
+      <div class="pf-group"><label class="pf-label">UPI ID</label><input class="pf-input" type="text" id="upi-id" placeholder="yourname@upi"></div>
+    </div>
+    <div class="pay-form" id="form-card">
+      <div class="card-preview">
+        <span class="card-chip">💳</span>
+        <div class="card-num-disp" id="card-preview-num">•••• •••• •••• ••••</div>
+        <div class="card-bottom">
+          <div><div class="c-lbl">Card Holder</div><div class="c-val" id="card-preview-name">YOUR NAME</div></div>
+          <div><div class="c-lbl" style="text-align:right">Expires</div><div class="c-val" id="card-preview-exp">MM/YY</div></div>
+        </div>
+        <span class="card-brand" id="card-brand-icon">💳</span>
+      </div>
+      <div class="pf-group"><label class="pf-label">Card Number</label><input class="pf-input" type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
+      <div class="pf-group"><label class="pf-label">Cardholder Name</label><input class="pf-input" type="text" id="card-name" placeholder="As on card" oninput="document.getElementById('card-preview-name').textContent=this.value.toUpperCase()||'YOUR NAME'"></div>
+      <div class="pf-row">
+        <div class="pf-group"><label class="pf-label">Expiry</label><input class="pf-input" type="text" id="card-exp" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)"></div>
+        <div class="pf-group"><label class="pf-label">CVV</label><input class="pf-input" type="password" id="card-cvv" placeholder="•••" maxlength="4"></div>
+      </div>
+    </div>
+    <div class="pay-form" id="form-wallet">
+      <div class="wallet-options">
+        <button class="wallet-opt selected" onclick="selWallet(this)"><span class="wl">🔵</span>Paytm Wallet</button>
+        <button class="wallet-opt" onclick="selWallet(this)"><span class="wl">🟢</span>Amazon Pay</button>
+        <button class="wallet-opt" onclick="selWallet(this)"><span class="wl">🟠</span>Mobikwik</button>
+      </div>
+    </div>
+    <div class="pay-form" id="form-netbank">
+      <div class="pf-group"><label class="pf-label">Select Bank</label>
+        <select class="pf-input" id="bank-select">
+          <option value="">— Choose your bank —</option>
+          <option>State Bank of India</option>
+          <option>HDFC Bank</option>
+          <option>ICICI Bank</option>
+          <option>Axis Bank</option>
+          <option>Yes Bank</option>
+        </select>
+      </div>
+      <div style="background:var(--blush);border-radius:9px;padding:10px 13px;font-size:12px;color:var(--warm-gray);margin-bottom:12px">
+        ℹ️ You'll be redirected to your bank's secure login page.
+      </div>
+    </div>
+    <div class="pay-form" id="form-cod">
+      <div style="background:var(--cream);border-radius:14px;padding:18px;margin-bottom:13px;text-align:center">
+        <div style="font-size:38px;margin-bottom:9px">📋</div>
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px">Pay at Venue</div>
+        <div style="font-size:12px;color:var(--warm-gray);line-height:1.6">Table reserved. Pay on arrival. ₹99 refundable hold may apply.</div>
+      </div>
+    </div>
+    <div class="secure-badge">🔒 <span>256-bit SSL encrypted · PCI DSS compliant</span></div>
+    <button class="btn-pay" id="pay-btn" onclick="processPayment()">
+      <span id="pay-btn-text">Pay </span><span id="pay-btn-amount"></span>
+      <div class="spinner" id="pay-spinner"></div>
+    </button>
+    <div class="pay-spacer"></div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     BOOKING SUCCESS
+───────────────────────────────────────────── -->
+<div id="payment-success">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Booking Confirmed!</div>
+    <div class="success-sub">Your reservation is confirmed. Details sent to your verified number.</div>
+    <div class="success-ref">
+      <div class="rl">Booking Reference</div>
+      <div class="rv" id="success-ref">LU-000000</div>
+    </div>
+    <div class="success-details">
+      <div class="success-detail"><div class="sdl">Venue</div><div class="sdv" id="success-venue">—</div></div>
+      <div class="success-detail"><div class="sdl">Date</div><div class="sdv" id="success-date">—</div></div>
+      <div class="success-detail"><div class="sdl">Paid</div><div class="sdv" id="success-paid">—</div></div>
+    </div>
+    <button class="btn-done" onclick="dismissSuccess()">View My Bookings</button>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     TOAST NOTIFICATION
+───────────────────────────────────────────── -->
+<div id="toast"><span id="toast-msg"></span></div>
+
+<!-- App Logic -->
+<script src="luma-app.js"></script>
+
+</body>
+</html>
